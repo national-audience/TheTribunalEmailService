@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+{{#user}}
+<head>
+    <meta charset="UTF-8">
+    <title>User {{username}}</title>
+</head>
+<body>
+{{> snippet/header}}
+<main>
+    {{#errorMessage}}
+    <p>
+        {{.}}
+    </p>
+    {{/errorMessage}}
+
+    <p></p>
+
+    <h2>{{name}} @{{username}}</h2>
+    <p>
+        {{description}}
+    </p>
+    <p>
+        <a href="/user/{{username}}/follows">
+            Follows: {{count_follows}}
+        </a>
+    </p>
+
+    <p>
+        <a href="/user/{{username}}/followers">
+            Followers: {{count_followers}}
+        </a>
+    </p>
+
+    <p>
+        <a href="/user/{{username}}/studios-follows">
+            Studios follows: {{count_studio_follows}}
+        </a>
+    </p>
+
+    <p>
+        Reviews:
+    <ul>
+        {{#reviews}}
+        <li>
+            <form action="/deleteReviewToDb" method="post">
+                {{#game}}
+                <input type='hidden' name='gameName' value="{{name}}">
+                {{/game}}
+                {{#user}}
+                <input type='hidden' name='userName' value="{{username}}">
+                {{/user}}
+                <input type='hidden' name='deleteReturnGame' value=false>
+                <input type='submit' value='Delete review'>
+            </form>
+            <p>
+                {{#user}} {{name}} {{/user}} about
+                {{#game}} <a href="/game/{{name}}"> {{name}}</a>{{/game}}:
+            </p>
+            <p>
+                {{comment}}
+            </p>
+            <p>
+                Score: {{score}} | Date: {{date}}
+            </p>
+        </li>
+        {{/reviews}}
+    </ul>
+
+    {{^reviews}}
+    It seems that this user has not made any reviews yet.
+    {{/reviews}}
+    <p>
+    {{> snippet/follow_button}}
+    <p>
+    {{> snippet/delete_button}}
+</main>
+</body>
+{{/user}}
+</html>
