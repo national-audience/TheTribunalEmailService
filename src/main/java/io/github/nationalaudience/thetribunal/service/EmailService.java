@@ -1,9 +1,7 @@
-package io.github.nationalaudience.thetribunal.email;
+package io.github.nationalaudience.thetribunal.service;
 
+import io.github.nationalaudience.thetribunal.Mail;
 import io.github.nationalaudience.thetribunal.MailProperties;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import javax.mail.Message;
@@ -45,13 +43,13 @@ public class EmailService {
         transport.connect("smtp.gmail.com", user, password);
     }
 
-    public void sendTestMessage(String mail) {
+    public void sendTestMessage(Mail mail) {
         try {
             var message = new MimeMessage(session);
             message.setFrom(new InternetAddress(user));
-            message.addRecipients(Message.RecipientType.TO, mail);
-            message.setSubject("Patata");
-            message.setText("Soy una patata");
+            message.addRecipients(Message.RecipientType.TO, mail.getEmailAddress());
+            message.setSubject(mail.getEmailSubject());
+            message.setText(mail.getEmailBody());
             transport.sendMessage(message, message.getAllRecipients());
         } catch (MessagingException e) {
             e.printStackTrace();
