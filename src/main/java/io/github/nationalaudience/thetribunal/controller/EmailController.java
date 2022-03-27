@@ -4,8 +4,9 @@ import io.github.nationalaudience.thetribunal.email.EmailService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class EmailController {
 
     private record FollowMessageData(String user, String following) {
@@ -19,7 +20,7 @@ public class EmailController {
 
     @PostMapping("/followMessage")
     public void sendFollowMessage(@RequestBody FollowMessageData messageData) {
-        emailService.sendTestMessage("javiervico8@gmail.com");
+        emailService.sendTestMessage("relegends00@gmail.com");
     }
 
 }
