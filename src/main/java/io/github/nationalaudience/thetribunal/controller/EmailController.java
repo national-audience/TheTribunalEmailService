@@ -7,18 +7,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 public class EmailController {
+
+    public record EmailRequest(String to, String subject, String body) {
+    }
 
     @Autowired
     EmailService emailService;
 
     @PostMapping("/followMessage")
-    public void sendFollowMessage(@RequestBody List<String> messageData) {
-        Mail mail = new Mail(messageData.get(0), messageData.get(1), messageData.get(2));
-        emailService.sendTestMessage(mail);
+    public void sendFollowMessage(@RequestBody EmailRequest request) {
+        emailService.sendTestMessage(new Mail(request.to, request.subject, request.body));
     }
 
 }
