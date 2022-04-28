@@ -1,7 +1,7 @@
 package io.github.nationalaudience.thetribunal.service;
 
 import io.github.nationalaudience.thetribunal.Mail;
-import io.github.nationalaudience.thetribunal.MailProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.mail.Message;
@@ -15,35 +15,39 @@ import java.util.Properties;
 @Service
 public class EmailService {
 
-    final MailProperties mailProperties;
+    @Value("${email.user}")
+    private String user;
 
-    private final String user;
-    private final String password;
+    @Value("${email.password}")
+    private String password;
 
     private final Session session;
-    private final Transport transport;
+    private Transport transport;
 
-    public EmailService(MailProperties mailProperties) throws MessagingException {
-        this.mailProperties = mailProperties;
 
-        user = mailProperties.getConfigValue("spring.mail.username");
-        password = mailProperties.getConfigValue("spring.mail.password");
-
+    public EmailService() throws MessagingException {
         Properties properties = new Properties();
         properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.smtp.auth", true);
         properties.put("mail.smtp.port", 587);
-
         properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-
         session = Session.getDefaultInstance(properties);
-
-        transport = session.getTransport("smtp");
-        transport.connect("smtp.gmail.com", user, password);
     }
 
     public void sendTestMessage(Mail mail) {
+        if (transport != null) {
+            try {
+                transport = session.getTransport("smtp");
+                System.out.printf(user);
+                System.out.printf(password);
+                transport.connect("smtp.gmail.com", user, password);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return;
+            }
+        }
+
         try {
             var message = new MimeMessage(session);
             message.setFrom(new InternetAddress(user));
